@@ -184,7 +184,6 @@ NSString *const ORKAmslerGridCalibrationRightIdentifier = @"amsler.grid.calibrat
                                    intendedUseDescription:(NSString *)intendedUseDescription
                                                   options:(ORKPredefinedTaskOption)options {
     NSMutableArray *steps = [NSMutableArray array];
-    UIColor *tintColor = [[[UIApplication sharedApplication] delegate] window].tintColor ? : ORKColor(ORKBlueHighlightColorKey);
 
     if (!(options & ORKPredefinedTaskOptionExcludeInstructions)) {
         {
@@ -206,12 +205,7 @@ NSString *const ORKAmslerGridCalibrationRightIdentifier = @"amsler.grid.calibrat
 
             NSString *leftEye = ORKLocalizedString(@"AMSLER_GRID_LEFT_EYE", nil);
             NSString *detailText = [@"\n" stringByAppendingString:[NSString stringWithFormat:ORKLocalizedString(@"AMSLER_GRID_INSTRUCTION_DETAIL_TEXT", nil), leftEye]];
-
-            NSMutableAttributedString *attributedDetailText = [[NSMutableAttributedString alloc] initWithString:detailText];
-            [attributedDetailText addAttribute:NSForegroundColorAttributeName
-                                         value:tintColor
-                                         range:[detailText rangeOfString:leftEye]];
-            step.attributedDetailText = attributedDetailText;
+            step.detailText = detailText;
             
             step.image = [UIImage imageNamed:@"amslerGrid" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
             step.shouldTintImages = YES;
@@ -231,12 +225,8 @@ NSString *const ORKAmslerGridCalibrationRightIdentifier = @"amsler.grid.calibrat
             step.text = ORKLocalizedString(@"AMSLER_GRID_INSTRUCTION_TEXT", nil);
             NSString *rightEye = ORKLocalizedString(@"AMSLER_GRID_RIGHT_EYE", nil);
             NSString *detailText = [@"\n" stringByAppendingString:[NSString stringWithFormat:ORKLocalizedString(@"AMSLER_GRID_INSTRUCTION_DETAIL_TEXT", nil), rightEye]];
+            step.detailText = detailText;
             
-            NSMutableAttributedString *attributedDetailText = [[NSMutableAttributedString alloc] initWithString:detailText];
-            [attributedDetailText addAttribute:NSForegroundColorAttributeName
-                                         value:tintColor
-                                         range:[detailText rangeOfString:rightEye]];
-            step.attributedDetailText = attributedDetailText;
             step.image = [UIImage imageNamed:@"amslerGrid" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
             step.imageContentMode = UIViewContentModeCenter;
             step.shouldTintImages = YES;
@@ -295,7 +285,7 @@ NSString *const ORKHolePegTestNonDominantRemoveStepIdentifier = @"hole.peg.test.
         {
             ORKInstructionStep *step = [[ORKInstructionStep alloc] initWithIdentifier:ORKInstruction1StepIdentifier];
             step.title = [[NSString alloc] initWithFormat:ORKLocalizedString(@"HOLE_PEG_TEST_TITLE_%@", nil), pegs];
-            step.text = dominantHandLeft ? [[NSString alloc] initWithFormat:ORKLocalizedString(@"HOLE_PEG_TEST_INTRO_TEXT_2_LEFT_HAND_FIRST_%@", nil), pegs, pegs] : [[NSString alloc] initWithFormat:ORKLocalizedString(@"HOLE_PEG_TEST_INTRO_TEXT_2_RIGHT_HAND_FIRST_%@", nil), pegs, pegs];
+            step.text = dominantHandLeft ? [[NSString alloc] initWithFormat:ORKLocalizedString(@"HOLE_PEG_TEST_INTRO_TEXT_2_LEFT_HAND_FIRST_%@%@", nil), pegs, pegs] : [[NSString alloc] initWithFormat:ORKLocalizedString(@"HOLE_PEG_TEST_INTRO_TEXT_2_RIGHT_HAND_FIRST_%@%@", nil), pegs, pegs];
             step.detailText = ORKLocalizedString(@"HOLE_PEG_TEST_CALL_TO_ACTION", nil);
             UIImage *image1 = [UIImage imageNamed:@"holepegtest1" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
             UIImage *image2 = [UIImage imageNamed:@"holepegtest2" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
@@ -422,7 +412,7 @@ NSString *const ORKTappingStepIdentifier = @"tapping";
             }
             step.image = [UIImage imageNamed:imageName inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
             step.shouldTintImages = YES;
-            step.imageContentMode = UIViewContentModeCenter;
+            step.imageContentMode = UIViewContentModeScaleAspectFit;
             ORKStepArrayAddStep(steps, step);
         }
     }
@@ -506,7 +496,7 @@ NSString *const ORKTappingStepIdentifier = @"tapping";
             } else {
                 step.image = [imageAnimation ork_flippedImage:UIImageOrientationUpMirrored];
             }
-            step.imageContentMode = UIViewContentModeCenter;
+            step.imageContentMode = UIViewContentModeScaleAspectFit;
             step.shouldTintImages = YES;
             
             ORKStepArrayAddStep(steps, step);
@@ -1266,7 +1256,7 @@ NSString *const ORKSpatialSpanMemoryStepIdentifier = @"cognitive.memory.spatials
         {
             ORKInstructionStep *step = [[ORKInstructionStep alloc] initWithIdentifier:ORKInstruction1StepIdentifier];
             step.title = ORKLocalizedString(@"SPATIAL_SPAN_MEMORY_TITLE", nil);
-            step.text = [NSString localizedStringWithFormat:requireReversal ? ORKLocalizedString(@"SPATIAL_SPAN_MEMORY_INTRO_2_TEXT_REVERSE_%@", nil) : ORKLocalizedString(@"SPATIAL_SPAN_MEMORY_INTRO_2_TEXT_%@", nil), targetPluralName, targetPluralName];
+            step.text = [NSString localizedStringWithFormat:requireReversal ? ORKLocalizedString(@"SPATIAL_SPAN_MEMORY_INTRO_2_TEXT_REVERSE_%@%@", nil) : ORKLocalizedString(@"SPATIAL_SPAN_MEMORY_INTRO_2_TEXT_%@%@", nil), targetPluralName, targetPluralName];
             step.detailText = ORKLocalizedString(@"SPATIAL_SPAN_MEMORY_CALL_TO_ACTION", nil);
             
             if (!customTargetImage) {
@@ -1701,6 +1691,7 @@ NSString *const ORKdBHLToneAudiometryStep3Identifier = @"dBHL3.tone.audiometry";
         step.title = ORKLocalizedString(@"dBHL_TONE_AUDIOMETRY_TASK_TITLE_2", nil);
         step.stepDuration = CGFLOAT_MAX;
         step.earPreference = ORKAudioChannelLeft;
+        step.headphoneType = ORKHeadphoneTypeIdentifierAirPods;
         ORKStepArrayAddStep(steps, step);
     }
     
@@ -1716,6 +1707,7 @@ NSString *const ORKdBHLToneAudiometryStep3Identifier = @"dBHL3.tone.audiometry";
         ORKdBHLToneAudiometryStep *step = [[ORKdBHLToneAudiometryStep alloc] initWithIdentifier:ORKdBHLToneAudiometryStep2Identifier];
         step.title = ORKLocalizedString(@"dBHL_TONE_AUDIOMETRY_TASK_TITLE_2", nil);
         step.stepDuration = CGFLOAT_MAX;
+        step.headphoneType = ORKHeadphoneTypeIdentifierAirPods;
         step.earPreference = ORKAudioChannelRight;
         ORKStepArrayAddStep(steps, step);
     }
@@ -2065,7 +2057,7 @@ NSString *const ORKPSATStepIdentifier = @"psat";
             step.title = versionTitle;
             
             NSDateComponentsFormatter *secondsFormatter = [NSDateComponentsFormatter new];
-            secondsFormatter.unitsStyle = NSDateFormatterFullStyle;
+            secondsFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleSpellOut;
             secondsFormatter.allowedUnits = NSCalendarUnitSecond;
             secondsFormatter.formattingContext = NSFormattingContextDynamic;
             secondsFormatter.maximumUnitCount = 1;
